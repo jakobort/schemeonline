@@ -4,549 +4,1232 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Scheme — Horario Universitario</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&family=IBM+Plex+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+/* ═══════════════════════════════════════════════
+   RESET / VARIABLES
+═══════════════════════════════════════════════ */
+*{box-sizing:border-box;margin:0;padding:0}
 
-:root {
-  --primary: #0056d6;
-  --primary-dark: #0041a8;
-  --accent: #ff6b35;
-  --bg: #f8f9fa;
-  --bg-dark: #1a1a2e;
+:root{
+  --bg:    #c0c0c0;
+  --bg2:   #d4d0c8;
+  --bg3:   #ece9d8;
   --white: #ffffff;
-  --text: #2c3e50;
-  --text-light: #7f8c8d;
-  --success: #27ae60;
-  --warning: #f39c12;
-  --border: #e0e6ed;
-  --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  --black: #000000;
+  --border-light: #ffffff;
+  --border-dark:  #808080;
+  --text:       #000000;
+  --text-muted: #555555;
+  --accent:  #000080;
+  --accent2: #1084d0;
+  --danger:  #b00000;
+  --ok:      #006400;
+  --warn-bg: #fff8dc;
+  --warn-txt:#7a5000;
+  --base-fs: 13px;
+  --mono:    'IBM Plex Mono', monospace;
+  --mono2:   'Share Tech Mono', monospace;
 }
 
-body {
-  font-family: 'Poppins', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.6;
-  overflow-x: hidden;
-}
-
-/* ═══════════════════════════════════════════════
-   NAVIGATION BAR
-═══════════════════════════════════════════════ */
-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  background: var(--white);
-  padding: 1.2rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: var(--shadow);
-  z-index: 1000;
-}
-
-.logo {
-  font-size: 1.8rem;
-  font-weight: 800;
-  color: var(--primary);
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.logo-icon {
-  width: 40px;
-  height: 40px;
-  background: linear-gradient(135deg, var(--primary), var(--accent));
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--white);
-  font-weight: 700;
-}
-
-nav-links {
-  display: flex;
-  gap: 2rem;
-  align-items: center;
-}
-
-nav a {
-  text-decoration: none;
-  color: var(--text);
-  font-weight: 500;
-  transition: color 0.3s;
-  cursor: pointer;
-}
-
-nav a:hover {
-  color: var(--primary);
-}
-
-.btn {
-  padding: 0.6rem 1.5rem;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 600;
-  font-size: 0.95rem;
-  transition: all 0.3s;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.btn-primary {
-  background: var(--primary);
-  color: var(--white);
-}
-
-.btn-primary:hover {
-  background: var(--primary-dark);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 86, 214, 0.3);
-}
-
-.btn-secondary {
-  background: var(--white);
-  color: var(--primary);
-  border: 2px solid var(--primary);
-}
-
-.btn-secondary:hover {
-  background: var(--primary);
-  color: var(--white);
+body{
+  background:var(--bg);
+  font-family:var(--mono);
+  font-size:var(--base-fs);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
 }
 
 /* ═══════════════════════════════════════════════
-   HERO SECTION
+   BASE COMPONENTS
 ═══════════════════════════════════════════════ */
-.hero {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--bg-dark) 100%);
-  color: var(--white);
-  padding: 8rem 2rem 6rem;
-  margin-top: 60px;
-  text-align: center;
-  overflow: hidden;
-  position: relative;
+
+.raised{border:2px solid;border-color:var(--border-light) var(--border-dark) var(--border-dark) var(--border-light)}
+.sunken{border:2px solid;border-color:var(--border-dark) var(--border-light) var(--border-light) var(--border-dark)}
+
+/* Buttons */
+.btn{
+  background:var(--bg);
+  border:2px solid;
+  border-color:var(--border-light) var(--border-dark) var(--border-dark) var(--border-light);
+  padding:5px 14px;
+  cursor:pointer;
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--text);
+  white-space:nowrap;
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  transition:background .05s;
+}
+.btn:active,.btn.pressed{
+  border-color:var(--border-dark) var(--border-light) var(--border-light) var(--border-dark);
+  padding:6px 13px 4px 15px;
+}
+.btn:hover{background:#d4d0c8}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+
+.btn-primary{background:var(--accent);color:#fff;font-weight:700}
+.btn-primary:hover{background:#0000a0}
+.btn-danger{background:var(--danger);color:#fff;font-weight:700}
+.btn-danger:hover{background:#d00000}
+
+/* Inputs */
+.input{
+  background:#fff;
+  border:2px solid;
+  border-color:var(--border-dark) var(--border-light) var(--border-light) var(--border-dark);
+  padding:5px 8px;
+  font-family:var(--mono);
+  font-size:12px;
+  outline:none;
+  color:var(--text);
+  width:100%;
+}
+.input:focus{outline:1px dotted var(--accent);outline-offset:-2px}
+
+.select{
+  background:#fff;
+  border:2px solid;
+  border-color:var(--border-dark) var(--border-light) var(--border-light) var(--border-dark);
+  padding:5px 6px;
+  font-family:var(--mono);
+  font-size:12px;
+  outline:none;
+  color:var(--text);
 }
 
-.hero-content {
-  max-width: 900px;
-  margin: 0 auto;
-  position: relative;
-  z-index: 2;
+/* Title bar */
+.titlebar{
+  background:linear-gradient(to right,#000080,#1084d0);
+  color:#fff;
+  padding:4px 7px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  user-select:none;
+  flex-shrink:0;
 }
-
-.hero h1 {
-  font-size: 3.5rem;
-  font-weight: 800;
-  margin-bottom: 1rem;
-  line-height: 1.2;
+.titlebar-title{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700}
+.titlebar-icon{
+  width:16px;height:16px;
+  background:#fff;border:1px solid rgba(0,0,0,.4);
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;color:#000;flex-shrink:0;
 }
-
-.hero-subtitle {
-  font-size: 1.4rem;
-  font-weight: 500;
-  margin-bottom: 2rem;
-  opacity: 0.95;
-  color: rgba(255, 255, 255, 0.9);
+.titlebar-btns{display:flex;gap:2px}
+.titlebar-btns button{
+  width:18px;height:16px;
+  background:var(--bg);
+  border:2px solid;
+  border-color:var(--border-light) var(--border-dark) var(--border-dark) var(--border-light);
+  cursor:pointer;font-size:10px;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--text);padding:0;line-height:1;
+  font-family:var(--mono);
 }
+.titlebar-btns button:hover{background:#e0e0e0}
+.titlebar-btns button.close-btn:hover{background:#c00;color:#fff}
 
-.hero p {
-  font-size: 1.1rem;
-  margin-bottom: 2.5rem;
-  opacity: 0.9;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-  line-height: 1.8;
-}
-
-.hero-buttons {
-  display: flex;
-  gap: 1.5rem;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.hero .btn {
-  padding: 0.8rem 2rem;
-  font-size: 1rem;
-}
-
-.btn-accent {
-  background: var(--accent);
-  color: var(--white);
-}
-
-.btn-accent:hover {
-  background: #e54d1f;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 107, 53, 0.3);
-}
-
-.hero::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  right: -10%;
-  width: 500px;
-  height: 500px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 50%;
-  animation: float 6s ease-in-out infinite;
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(20px); }
+.window{
+  background:var(--bg);
+  border:2px solid;
+  border-color:var(--border-light) var(--border-dark) var(--border-dark) var(--border-light);
 }
 
 /* ═══════════════════════════════════════════════
-   FEATURES SECTION
+   TASKBAR
 ═══════════════════════════════════════════════ */
-.features {
-  padding: 5rem 2rem;
-  background: var(--white);
+#taskbar{
+  position:fixed;top:0;left:0;right:0;
+  height:38px;
+  background:var(--bg);
+  border-bottom:2px solid var(--border-dark);
+  display:flex;align-items:stretch;
+  padding:2px 4px;gap:4px;z-index:999;
+  box-shadow:0 2px 0 var(--border-light);
 }
-
-.features h2 {
-  text-align: center;
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-  color: var(--bg-dark);
+#start-btn{
+  padding:0 12px;
+  background:var(--bg);
+  border:2px solid;
+  border-color:var(--border-light) var(--border-dark) var(--border-dark) var(--border-light);
+  cursor:pointer;font-family:var(--mono);font-size:13px;font-weight:700;
+  display:flex;align-items:center;gap:7px;
 }
+#start-btn:hover{background:#d4d0c8}
+#start-btn:active{border-color:var(--border-dark) var(--border-light) var(--border-light) var(--border-dark)}
+.start-logo{font-family:'VT323',monospace;font-size:22px;line-height:1;color:#000080}
 
-.features-subtitle {
-  text-align: center;
-  color: var(--text-light);
-  margin-bottom: 4rem;
-  font-size: 1.1rem;
+.taskbar-sep{width:1px;background:var(--border-dark);margin:4px 2px;box-shadow:1px 0 0 var(--border-light)}
+
+#clock-display{
+  margin-left:auto;
+  border:2px solid;
+  border-color:var(--border-dark) var(--border-light) var(--border-light) var(--border-dark);
+  padding:0 12px;font-size:12px;
+  display:flex;align-items:center;font-family:var(--mono2);gap:7px;
 }
+.clock-sep{color:var(--text-muted);font-size:11px}
 
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
+.taskbar-btn{
+  padding:0 12px;
+  background:var(--bg);
+  border:2px solid;
+  border-color:var(--border-dark) var(--border-light) var(--border-light) var(--border-dark);
+  cursor:pointer;font-family:var(--mono);font-size:12px;
+  display:flex;align-items:center;gap:6px;
 }
-
-.feature-card {
-  background: var(--bg);
-  padding: 2rem;
-  border-radius: 12px;
-  text-align: center;
-  transition: all 0.3s;
-  border: 2px solid transparent;
+.taskbar-btn:hover{background:#d4d0c8}
+.taskbar-btn.active{
+  border-color:var(--border-light) var(--border-dark) var(--border-dark) var(--border-light);
+  background:#e0e0e0;font-weight:700;
 }
-
-.feature-card:hover {
-  transform: translateY(-8px);
-  border-color: var(--primary);
-  box-shadow: var(--shadow);
-}
-
-.feature-icon {
-  width: 70px;
-  height: 70px;
-  background: linear-gradient(135deg, var(--primary), var(--accent));
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 1.5rem;
-  font-size: 2rem;
-}
-
-.feature-card h3 {
-  font-size: 1.4rem;
-  margin-bottom: 0.8rem;
-  color: var(--bg-dark);
-}
-
-.feature-card p {
-  color: var(--text-light);
-  line-height: 1.7;
+.tb-icon{
+  width:15px;height:15px;
+  background:var(--accent);
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:9px;color:#fff;font-family:'VT323',monospace;
+  flex-shrink:0;
 }
 
 /* ═══════════════════════════════════════════════
-   CTA SECTION
+   START MENU
 ═══════════════════════════════════════════════ */
-.cta {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-  color: var(--white);
-  padding: 4rem 2rem;
-  text-align: center;
-  margin: 3rem 0;
+#start-menu{
+  display:none;position:fixed;top:38px;left:2px;width:210px;
+  background:var(--bg);
+  border:2px solid;border-color:var(--border-light) var(--border-dark) var(--border-dark) var(--border-light);
+  z-index:1000;box-shadow:3px 3px 0 #000;
+}
+#start-menu.open{display:flex}
+.start-sidebar{
+  width:30px;background:#000080;
+  display:flex;align-items:flex-end;padding-bottom:10px;
+  writing-mode:vertical-rl;transform:rotate(180deg);
+  font-family:'VT323',monospace;font-size:22px;color:#fff;
+  letter-spacing:2px;padding-left:4px;
+}
+.start-items{flex:1}
+.start-item{
+  display:flex;align-items:center;gap:9px;
+  padding:6px 10px;cursor:pointer;font-size:12px;
+}
+.start-item:hover{background:#000080;color:#fff}
+.start-item .si-icon{
+  width:18px;height:18px;flex-shrink:0;
+  background:var(--bg2);border:1px solid var(--border-dark);
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;
+}
+.start-sep{border-top:1px solid var(--border-dark);margin:2px 4px;box-shadow:0 1px 0 var(--border-light)}
+
+/* ═══════════════════════════════════════════════
+   SCREEN ROUTER
+═══════════════════════════════════════════════ */
+#screen-landing,#screen-app{position:fixed;inset:38px 0 0 0;overflow:auto}
+#screen-landing{display:flex;flex-direction:column}
+#screen-app{display:none}
+
+/* ═══════════════════════════════════════════════
+   LANDING DESKTOP
+═══════════════════════════════════════════════ */
+#landing-desktop{
+  flex:1;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:22px;padding:30px 20px 52px;
+  background:var(--bg3);
+  background-image:
+    repeating-linear-gradient(0deg,transparent,transparent 15px,rgba(0,0,0,.03) 15px,rgba(0,0,0,.03) 16px),
+    repeating-linear-gradient(90deg,transparent,transparent 15px,rgba(0,0,0,.03) 15px,rgba(0,0,0,.03) 16px);
+}
+.desktop-icons{display:flex;gap:40px;flex-wrap:wrap;justify-content:center}
+.desktop-icon{
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  cursor:pointer;width:76px;text-align:center;
+}
+.desktop-icon:hover .icon-label{background:#000080;color:#fff}
+.desktop-icon:active .d-icon-img{transform:scale(0.93)}
+.d-icon-img{
+  width:52px;height:52px;
+  border:1px solid var(--border-dark);
+  background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .1s;
+  box-shadow:3px 3px 0 rgba(0,0,0,.2);
+}
+.icon-label{font-size:12px;padding:2px 5px;color:var(--text);line-height:1.3}
+
+/* Hero window */
+.hero-window{
+  width:100%;max-width:600px;
+  background:var(--bg);
+  border:2px solid;
+  border-color:var(--border-light) var(--border-dark) var(--border-dark) var(--border-light);
+  box-shadow:5px 5px 0 rgba(0,0,0,.25);
+}
+.hero-body{padding:26px 32px}
+.hero-title{
+  font-family:'VT323',monospace;
+  font-size:60px;line-height:1;
+  color:#000080;margin-bottom:6px;
+  text-shadow:2px 2px 0 rgba(0,0,128,.15);
+}
+.hero-tagline{
+  font-size:13px;color:#000080;
+  font-family:var(--mono2);
+  margin-bottom:14px;letter-spacing:.03em;
+  border-left:3px solid #000080;padding-left:10px;
+}
+.hero-sub{font-size:12px;color:var(--text-muted);margin-bottom:20px;line-height:1.8}
+.hero-actions{display:flex;gap:9px;flex-wrap:wrap}
+.hero-divider{border-top:1px solid var(--border-dark);margin:16px 0;box-shadow:0 1px 0 var(--border-light)}
+.hero-features{display:flex;gap:7px;flex-wrap:wrap}
+.feature-tag{
+  display:flex;align-items:center;gap:6px;padding:4px 11px;
+  background:#fff;border:1px solid var(--border-dark);
+  font-size:11px;box-shadow:1px 1px 0 rgba(0,0,0,.1);
+}
+.ft-dot{width:7px;height:7px;background:#000080;flex-shrink:0}
+
+/* Feature cards */
+.features-row{
+  display:flex;gap:10px;flex-wrap:wrap;justify-content:center;
+  width:100%;max-width:600px;
+}
+.feat-card{
+  background:var(--bg);flex:1;min-width:130px;
+  border:2px solid;
+  border-color:var(--border-light) var(--border-dark) var(--border-dark) var(--border-light);
+  padding:13px;box-shadow:2px 2px 0 rgba(0,0,0,.15);
+}
+.feat-icon{
+  width:26px;height:26px;background:var(--accent);
+  border:1px solid rgba(0,0,0,.3);
+  display:flex;align-items:center;justify-content:center;margin-bottom:9px;
+}
+.feat-icon svg{fill:#fff;width:14px;height:14px}
+.feat-card-title{font-weight:700;font-size:12px;margin-bottom:5px}
+.feat-card-desc{font-size:11px;color:var(--text-muted);line-height:1.65}
+
+/* ═══════════════════════════════════════════════
+   APP LAYOUT
+═══════════════════════════════════════════════ */
+#app-root{display:flex;flex-direction:column;height:100%}
+
+#menu-bar{
+  background:var(--bg);border-bottom:1px solid var(--border-dark);
+  display:flex;align-items:center;padding:2px 5px;flex-shrink:0;position:relative;z-index:100;
+}
+.menu-item{padding:3px 10px;font-size:12px;cursor:pointer;white-space:nowrap}
+.menu-item:hover,.menu-item.open{background:#000080;color:#fff}
+
+#toolbar{
+  background:var(--bg);border-bottom:2px solid var(--border-dark);
+  display:flex;align-items:center;gap:5px;padding:4px 8px;flex-wrap:wrap;flex-shrink:0;
+}
+.tool-group{display:flex;align-items:center;gap:4px}
+
+/* API status badge in toolbar */
+.api-badge{
+  display:flex;align-items:center;gap:5px;
+  border:2px solid;
+  border-color:var(--border-dark) var(--border-light) var(--border-light) var(--border-dark);
+  padding:3px 10px;font-size:11px;
+  font-family:var(--mono2);
+  background:#fff;
+}
+.api-dot{
+  width:8px;height:8px;
+  border-radius:50%;
+  flex-shrink:0;
+}
+.api-dot.checking{background:#f0a000;animation:blink .8s infinite}
+.api-dot.connected{background:#00a800}
+.api-dot.disconnected{background:#c00000}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* Main split */
+#main-split{display:flex;flex:1;overflow:hidden}
+
+#sidebar{
+  width:195px;flex-shrink:0;
+  border-right:2px solid var(--border-dark);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.sidebar-header{
+  background:linear-gradient(to right,#000080,#1084d0);
+  color:#fff;padding:4px 9px;font-weight:700;font-size:12px;flex-shrink:0;
+  display:flex;align-items:center;gap:5px;
+}
+.sh-icon{width:11px;height:11px;background:rgba(255,255,255,.3);display:inline-block}
+
+#subject-list{flex:1;overflow-y:auto;padding:3px}
+.subject-entry{
+  padding:5px 7px;cursor:pointer;display:flex;align-items:flex-start;gap:6px;
+  font-size:12px;border:1px solid transparent;
+}
+.subject-entry:hover{background:var(--bg2);border-color:var(--border-dark) var(--border-light) var(--border-light) var(--border-dark)}
+.subject-entry.selected{background:#000080;color:#fff;border-color:transparent}
+.subject-entry.selected .subj-credits{color:#aac}
+.subj-dot{width:11px;height:11px;flex-shrink:0;margin-top:3px;border:1px solid rgba(0,0,0,.35)}
+.subj-info{flex:1;min-width:0}
+.subj-name{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.subj-credits{font-size:11px;color:var(--text-muted)}
+
+#sidebar-summary{
+  border-top:2px solid var(--border-dark);padding:7px;background:var(--bg2);flex-shrink:0;
+}
+.summary-label{font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.summary-box{
+  border:2px solid;
+  border-color:var(--border-dark) var(--border-light) var(--border-light) var(--border-dark);
+  background:#fff;padding:7px;font-size:11px;
+}
+.summary-row{display:flex;justify-content:space-between;margin-bottom:4px}
+.summary-row:last-child{margin-bottom:0}
+
+#content-area{flex:1;display:flex;flex-direction:column;overflow:hidden;background:#fff}
+
+#tab-bar{
+  background:var(--bg);border-bottom:2px solid var(--border-dark);
+  display:flex;align-items:flex-end;padding:3px 7px 0;flex-shrink:0;
+}
+.tab{
+  padding:4px 14px;font-size:12px;cursor:pointer;
+  background:var(--bg2);
+  border:1px solid var(--border-dark);
+  border-bottom:none;
+  margin-right:2px;position:relative;top:1px;
+  display:flex;align-items:center;gap:5px;
+}
+.tab.active{
+  background:#fff;border-bottom:2px solid #fff;font-weight:700;
+}
+.tab:not(.active):hover{background:var(--bg)}
+.tab-icon{width:13px;height:13px;background:var(--accent);display:inline-block;flex-shrink:0}
+
+#week-nav{
+  background:var(--bg2);border-bottom:1px solid var(--border-dark);
+  display:flex;align-items:center;gap:6px;padding:4px 10px;flex-shrink:0;
 }
 
-.cta h2 {
-  font-size: 2rem;
-  margin-bottom: 1rem;
-}
+#tab-content{flex:1;overflow:auto;display:flex;flex-direction:column}
+#tab-week{flex:1;display:flex;flex-direction:column;overflow:hidden}
+#schedule-wrapper{flex:1;overflow:auto;position:relative}
 
-.cta p {
-  font-size: 1.1rem;
-  margin-bottom: 2rem;
-  opacity: 0.9;
+/* ═══════════════════════════════════════════════
+   SCHEDULE TABLE
+═══════════════════════════════════════════════ */
+#schedule-table{width:100%;border-collapse:collapse;min-width:540px}
+#schedule-table th,
+#schedule-table td{border:1px solid #bbb}
+
+#schedule-table thead th{
+  background:var(--bg2);padding:5px 7px;
+  font-size:12px;font-weight:700;text-align:center;
+  position:sticky;top:0;z-index:10;border-color:#999;
+}
+.today-col{background:#e8efff!important}
+.today-col-header{background:linear-gradient(to bottom,#c5d7ff,#dce8ff)!important}
+
+.time-cell{
+  background:var(--bg2);padding:3px 5px;
+  text-align:center;font-size:11px;font-weight:700;
+  color:var(--text-muted);white-space:nowrap;
+  position:sticky;left:0;z-index:9;
+  border-color:#999;min-width:48px;
+  font-family:var(--mono2);
+}
+.empty-cell{
+  background:#fff;min-height:44px;height:44px;cursor:crosshair;
+}
+.empty-cell:hover{background:#f0f5ff}
+
+.class-block{
+  padding:4px 6px;cursor:pointer;height:100%;
+  display:flex;flex-direction:column;justify-content:flex-start;
+}
+.class-block:hover{filter:brightness(.88)}
+.class-name{font-weight:700;font-size:12px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.class-code{font-size:10px;opacity:.75;line-height:1.2;font-family:var(--mono2)}
+.class-room{font-size:10px;opacity:.75;line-height:1.2;font-family:var(--mono2)}
+.class-time{font-size:9px;opacity:.6;line-height:1.2;font-family:var(--mono2)}
+td.class-td{padding:0;border:2px solid rgba(0,0,0,.4)}
+
+/* Current time line */
+#time-line{
+  position:absolute;left:0;right:0;height:2px;
+  background:#ff0000;z-index:20;pointer-events:none;
+}
+#time-line::before{
+  content:'';position:absolute;left:48px;top:-4px;
+  width:8px;height:8px;border-radius:50%;background:#ff0000;
 }
 
 /* ═══════════════════════════════════════════════
-   FOOTER
+   LIST TAB
 ═══════════════════════════════════════════════ */
-footer {
-  background: var(--bg-dark);
-  color: var(--white);
-  padding: 3rem 2rem;
-  text-align: center;
+#tab-list{display:none;padding:12px;overflow:auto}
+.list-table{width:100%;border-collapse:collapse;font-size:12px}
+.list-table th{
+  background:linear-gradient(to right,#000080,#1084d0);
+  color:#fff;border:1px solid #000055;
+  padding:5px 9px;text-align:left;font-weight:700;
+  position:sticky;top:0;
+}
+.list-table td{border:1px solid #ccc;padding:5px 9px}
+.list-table tr:nth-child(even) td{background:#f6f6f6}
+.list-table tr:hover td{background:#e8efff}
+.list-table tfoot td{background:var(--bg2)!important;border-top:2px solid #999;font-weight:700}
+
+/* ═══════════════════════════════════════════════
+   STATS TAB
+═══════════════════════════════════════════════ */
+#tab-stats{display:none;padding:12px;overflow:auto}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:9px;margin-bottom:14px}
+.stat-card{
+  background:var(--bg);padding:12px;
+  border:2px solid;border-color:var(--border-light) var(--border-dark) var(--border-dark) var(--border-light);
+}
+.stat-label{font-size:11px;color:var(--text-muted);margin-bottom:2px;text-transform:uppercase;letter-spacing:.05em}
+.stat-value{font-family:'VT323',monospace;font-size:46px;line-height:1;color:#000080}
+.stat-sub{font-size:10px;color:var(--text-muted);margin-top:2px;font-family:var(--mono2)}
+.bar-chart{
+  background:var(--bg);padding:13px;
+  border:2px solid;border-color:var(--border-light) var(--border-dark) var(--border-dark) var(--border-light);
+  margin-bottom:10px;
+}
+.chart-title{font-weight:700;font-size:12px;border-bottom:1px solid var(--border-dark);padding-bottom:5px;margin-bottom:11px;box-shadow:0 1px 0 var(--border-light)}
+.bar-row{display:flex;align-items:center;gap:7px;margin-bottom:6px}
+.bar-row:last-child{margin-bottom:0}
+.bar-label{width:34px;text-align:right;font-size:11px;color:var(--text-muted);font-family:var(--mono2)}
+.bar-track{
+  flex:1;height:18px;background:#fff;
+  border:2px solid;border-color:var(--border-dark) var(--border-light) var(--border-light) var(--border-dark);
+}
+.bar-fill{height:100%;background:#000080;transition:width .4s ease}
+.bar-fill.today-bar{background:#1084d0}
+.bar-val{font-size:11px;width:26px;font-family:var(--mono2);color:var(--text-muted)}
+
+/* ═══════════════════════════════════════════════
+   STATUS BAR
+═══════════════════════════════════════════════ */
+#status-bar{
+  background:var(--bg);border-top:2px solid var(--border-dark);
+  display:flex;gap:3px;padding:2px 5px;flex-shrink:0;
+}
+.status-pane{
+  border:2px solid;border-color:var(--border-dark) var(--border-light) var(--border-light) var(--border-dark);
+  padding:2px 10px;font-size:11px;color:var(--text-muted);
+  font-family:var(--mono2);
+}
+.status-pane:first-child{flex:1}
+.sp-ok{color:var(--ok)}
+.sp-warn{color:var(--danger)}
+
+/* ═══════════════════════════════════════════════
+   MODAL
+═══════════════════════════════════════════════ */
+.modal-backdrop{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);
+  z-index:2000;align-items:center;justify-content:center;
+}
+.modal-backdrop.open{display:flex}
+.modal{
+  background:var(--bg);min-width:310px;max-width:400px;width:100%;
+  border:2px solid;
+  border-color:var(--border-light) var(--border-dark) var(--border-dark) var(--border-light);
+  box-shadow:5px 5px 0 #000;
+  max-height:92vh;
+  display:flex;flex-direction:column;
+}
+.modal-body{padding:14px;display:flex;flex-direction:column;gap:11px;overflow-y:auto;flex:1}
+.field-label{font-size:12px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:5px}
+.days-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:3px;
+  border:2px solid;border-color:var(--border-dark) var(--border-light) var(--border-light) var(--border-dark);
+  background:#fff;padding:7px;
+}
+.day-check{display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;padding:3px 0}
+.day-check:hover{color:#000080}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.modal-footer{
+  display:flex;justify-content:flex-end;gap:7px;
+  padding:9px 14px;border-top:1px solid var(--border-dark);
+  background:var(--bg2);
+}
+.color-swatches{display:flex;gap:4px;flex-wrap:wrap}
+.swatch{
+  width:22px;height:22px;cursor:pointer;
+  border:2px solid transparent;
+  transition:transform .1s;
+}
+.swatch:hover{transform:scale(1.15)}
+.swatch.selected{border-color:#000!important;outline:1px solid #fff;outline-offset:-3px}
+
+/* Conflict warn */
+#conflict-warn{
+  background:var(--warn-bg);
+  border:2px solid;border-color:var(--border-dark) var(--border-light) var(--border-light) var(--border-dark);
+  padding:7px 9px;font-size:11px;color:var(--warn-txt);
+  display:none;align-items:center;gap:7px;
+}
+.warn-icon{
+  width:16px;height:16px;background:#ffc107;border:1px solid #a07000;
+  display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;
 }
 
-footer p {
-  margin-bottom: 0.5rem;
-}
+/* Prop grid */
+.prop-grid{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;font-size:12px}
+.prop-key{font-weight:700;color:var(--text-muted);white-space:nowrap}
 
-.footer-links {
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
-  margin-top: 1.5rem;
-  flex-wrap: wrap;
+/* ═══════════════════════════════════════════════
+   EMPTY STATES
+═══════════════════════════════════════════════ */
+.empty-schedule{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  height:100%;gap:13px;color:var(--text-muted);padding:48px;text-align:center;
 }
-
-.footer-links a {
-  color: var(--white);
-  text-decoration: none;
-  transition: color 0.3s;
+.empty-big{
+  width:60px;height:60px;background:var(--bg2);
+  border:2px solid;border-color:var(--border-light) var(--border-dark) var(--border-dark) var(--border-light);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'VT323',monospace;font-size:34px;color:var(--text-muted);
 }
+.empty-schedule p{font-size:12px;line-height:1.8;max-width:250px}
 
-.footer-links a:hover {
-  color: var(--primary);
+/* ═══════════════════════════════════════════════
+   SKELETON LOADER
+═══════════════════════════════════════════════ */
+@keyframes sk-shimmer{
+  0%  {background-position:-500px 0}
+  100%{background-position: 500px 0}
+}
+.skeleton{
+  background:linear-gradient(90deg,var(--bg2) 25%,var(--bg) 50%,var(--bg2) 75%);
+  background-size:500px 100%;
+  animation:sk-shimmer 1.5s infinite;
+}
+.sk-row{height:46px;margin-bottom:3px}
+
+/* ═══════════════════════════════════════════════
+   DROPDOWN
+═══════════════════════════════════════════════ */
+.dropdown{
+  display:none;position:absolute;top:100%;left:0;
+  background:var(--bg);border:2px solid;
+  border-color:var(--border-light) var(--border-dark) var(--border-dark) var(--border-light);
+  z-index:500;min-width:170px;
+  box-shadow:3px 3px 0 rgba(0,0,0,.5);
+}
+.dropdown.open{display:block}
+.dropdown-item{padding:5px 15px;font-size:12px;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:7px}
+.dropdown-item:hover{background:#000080;color:#fff}
+.di-icon{
+  width:15px;height:15px;flex-shrink:0;
+  background:var(--bg2);border:1px solid var(--border-dark);
+  display:flex;align-items:center;justify-content:center;font-size:9px;
+}
+.dropdown-sep{border-top:1px solid var(--border-dark);margin:2px 0;box-shadow:0 1px 0 var(--border-light)}
+
+/* ═══════════════════════════════════════════════
+   CONNECTIONS TAB
+═══════════════════════════════════════════════ */
+#tab-connections{display:none;padding:12px;overflow:auto}
+.conn-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:9px}
+.conn-card{
+  background:var(--bg);padding:11px;
+  border:2px solid;border-color:var(--border-light) var(--border-dark) var(--border-dark) var(--border-light);
+}
+.conn-name{font-weight:700;font-size:13px}
+.conn-univ{font-size:11px;color:var(--text-muted);margin-bottom:6px}
+.conn-shared{font-size:11px;color:#000080;margin-bottom:9px;font-family:var(--mono2)}
+.empty-conn{color:var(--text-muted);font-size:12px;line-height:1.8;text-align:center;padding:40px;width:100%}
+
+/* ═══════════════════════════════════════════════
+   AUTH PANEL
+═══════════════════════════════════════════════ */
+#auth-panel{
+  position:fixed;top:38px;right:0;bottom:0;width:285px;
+  background:var(--bg);
+  border-left:2px solid var(--border-dark);
+  display:flex;flex-direction:column;
+  transform:translateX(100%);transition:transform .2s ease;
+  z-index:500;box-shadow:-4px 0 0 rgba(0,0,0,.2);
+}
+#auth-panel.open{transform:translateX(0)}
+#auth-overlay{display:none;position:fixed;inset:38px 0 0 0;background:rgba(0,0,0,.25);z-index:499}
+#auth-overlay.open{display:block}
+.auth-tab-bar{display:flex;border-bottom:2px solid var(--border-dark);background:var(--bg)}
+.auth-tab{
+  flex:1;padding:6px;text-align:center;font-size:12px;cursor:pointer;
+  border-right:1px solid var(--border-dark);
+}
+.auth-tab:last-child{border-right:none}
+.auth-tab.active{background:#fff;font-weight:700}
+.auth-tab:hover:not(.active){background:var(--bg2)}
+.auth-body{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.auth-link{cursor:pointer;color:#000080;text-decoration:underline;font-size:11px}
+
+/* ═══════════════════════════════════════════════
+   TOAST NOTIFICATIONS
+═══════════════════════════════════════════════ */
+#toast-container{
+  position:fixed;bottom:50px;right:14px;
+  z-index:9999;display:flex;flex-direction:column;gap:6px;
+  pointer-events:none;
+}
+.toast{
+  padding:8px 15px;font-size:12px;border:2px solid;
+  background:var(--bg);font-family:var(--mono);
+  opacity:0;transform:translateX(24px);
+  transition:opacity .2s,transform .2s;
+  max-width:300px;min-width:200px;
+  box-shadow:3px 3px 0 rgba(0,0,0,.3);
+}
+.toast.show{opacity:1;transform:translateX(0)}
+.toast-ok{
+  border-color:var(--border-light) var(--border-dark) var(--border-dark) var(--border-light);
+  color:var(--ok);
+}
+.toast-warn{
+  border-color:#a07000 #c8a000 #c8a000 #a07000;
+  background:var(--warn-bg);color:var(--warn-txt);
+}
+.toast-err{
+  border-color:#800 #d00 #d00 #800;
+  background:#fff0f0;color:#800;
 }
 
 /* ═══════════════════════════════════════════════
-   APP LAYOUT (Hidden by default)
+   SCROLLBARS — Win98 style
 ═══════════════════════════════════════════════ */
-#app-root {
-  display: none;
-  flex-direction: column;
-  height: 100vh;
-  margin-top: 0;
+::-webkit-scrollbar{width:16px;height:16px}
+::-webkit-scrollbar-track{background:var(--bg3);border:1px solid var(--border-dark)}
+::-webkit-scrollbar-thumb{
+  background:var(--bg);
+  border:2px solid;border-color:var(--border-light) var(--border-dark) var(--border-dark) var(--border-light);
 }
-
-#app-root.active {
-  display: flex;
-}
-
-#main-content {
-  flex: 1;
-  overflow: auto;
-  padding: 2rem;
-  background: var(--bg);
+::-webkit-scrollbar-button{
+  background:var(--bg);
+  border:2px solid;border-color:var(--border-light) var(--border-dark) var(--border-dark) var(--border-light);
+  display:block;height:16px;width:16px;
 }
 
 /* ═══════════════════════════════════════════════
-   RESPONSIVE
+   TOOLTIP
 ═══════════════════════════════════════════════ */
-@media (max-width: 768px) {
-  .hero h1 {
-    font-size: 2.2rem;
-  }
-
-  .hero-subtitle {
-    font-size: 1.1rem;
-  }
-
-  nav {
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .hero-buttons {
-    flex-direction: column;
-  }
-
-  .hero .btn {
-    width: 100%;
-  }
-
-  .features-grid {
-    grid-template-columns: 1fr;
-  }
+[data-tip]{position:relative}
+[data-tip]:hover::after{
+  content:attr(data-tip);
+  position:absolute;bottom:calc(100% + 5px);left:50%;transform:translateX(-50%);
+  background:#000;color:#fff;font-size:11px;padding:3px 8px;white-space:nowrap;
+  pointer-events:none;z-index:9999;border:1px solid #333;
 }
 
-@media (max-width: 480px) {
-  .hero h1 {
-    font-size: 1.8rem;
-  }
-
-  .hero-subtitle {
-    font-size: 1rem;
-  }
-
-  .hero {
-    padding: 4rem 1rem 3rem;
-  }
-
-  .features {
-    padding: 2rem 1rem;
-  }
-
-  .hero::before {
-    width: 300px;
-    height: 300px;
-    right: -20%;
-  }
+/* ═══════════════════════════════════════════════
+   PRINT
+═══════════════════════════════════════════════ */
+@media print{
+  #taskbar,#menu-bar,#toolbar,#tab-bar,#week-nav,#status-bar,#sidebar,
+  #auth-panel,#auth-overlay,.modal-backdrop,#toast-container{display:none!important}
+  #screen-app{position:static;inset:auto;overflow:visible}
+  #main-split{overflow:visible}
+  #content-area,#tab-content,#schedule-wrapper,#tab-week{overflow:visible;display:block!important}
+  body{background:#fff;font-size:11px}
+  #schedule-table{page-break-inside:avoid}
+  #schedule-table thead th{background:#ddd!important;print-color-adjust:exact}
+  .time-cell{background:#ddd!important;print-color-adjust:exact}
+  td.class-td{print-color-adjust:exact}
+  #time-line{display:none!important}
 }
 </style>
 </head>
 <body>
 
-<!-- Navigation -->
-<nav>
-  <div class="logo">
-    <div class="logo-icon">S</div>
-    <span>Scheme</span>
-  </div>
-  <div style="display: flex; gap: 2rem; align-items: center;">
-    <a href="#features">Características</a>
-    <a href="#" onclick="scrollToFeatures()">Cómo funciona</a>
-    <button class="btn btn-primary" onclick="startApp()">Empezar</button>
-  </div>
-</nav>
-
-<!-- Hero Section -->
-<section class="hero">
-  <div class="hero-content">
-    <h1>Tu Horario Universitario, Perfecto</h1>
-    <p class="hero-subtitle">Organiza tu semestre sin conflictos</p>
-    <p>Crea tu horario, detecta automáticamente cuando dos materias se solapan, y guarda todo en la nube. Un lugar único para tu semestre completo.</p>
-    <div class="hero-buttons">
-      <button class="btn btn-accent" onclick="startApp()">
-        ▶ Comenzar Ahora
-      </button>
-      <button class="btn btn-secondary" onclick="scrollToFeatures()">
-        Saber Más
-      </button>
-    </div>
-  </div>
-</section>
-
-<!-- Features Section -->
-<section class="features" id="features">
-  <h2>¿Por qué Scheme?</h2>
-  <p class="features-subtitle">Todo lo que necesitas para organizar tu semestre</p>
-  
-  <div class="features-grid">
-    <div class="feature-card">
-      <div class="feature-icon">📅</div>
-      <h3>Vista Semanal</h3>
-      <p>Visualiza toda tu semana de un vistazo. Arrastrable e interactivo para agregar clases al instante.</p>
-    </div>
-
-    <div class="feature-card">
-      <div class="feature-icon">⚠️</div>
-      <h3>Detecta Choques</h3>
-      <p>Alertas automáticas cuando dos materias se solapan. Nunca tendrás conflictos de horario.</p>
-    </div>
-
-    <div class="feature-card">
-      <div class="feature-icon">☁️</div>
-      <h3>Sincronización</h3>
-      <p>Tus horarios se guardan en la nube. Accede desde cualquier dispositivo, siempre sincronizado.</p>
-    </div>
-
-    <div class="feature-card">
-      <div class="feature-icon">📊</div>
-      <h3>Estadísticas</h3>
-      <p>Créditos totales, horas por día y análisis de tu semestre. Todo en datos claros.</p>
-    </div>
-
-    <div class="feature-card">
-      <div class="feature-icon">👥</div>
-      <h3>Comparte</h3>
-      <p>Compara tu horario con amigos y busca coincidencias para clases juntos.</p>
-    </div>
-
-    <div class="feature-card">
-      <div class="feature-icon">🚀</div>
-      <h3>Rápido y Gratis</h3>
-      <p>Sin anuncios, sin suscripciones. Solo funcionalidad pura y simple.</p>
-    </div>
-  </div>
-</section>
-
-<!-- CTA Section -->
-<section class="cta">
-  <h2>¿Listo para organizar tu semestre?</h2>
-  <p>Comienza gratis, sin necesidad de registro</p>
-  <button class="btn btn-accent" onclick="startApp()" style="background: var(--white); color: var(--primary);">
-    Abre Scheme Ahora
+<!-- ═══════════════ TASKBAR ═══════════════ -->
+<div id="taskbar">
+  <button id="start-btn" onclick="toggleStart()">
+    <span class="start-logo">Sc</span>
+    <strong>Scheme</strong>
   </button>
-</section>
-
-<!-- Footer -->
-<footer>
-  <p>&copy; 2025 Scheme - Horarios Universitarios</p>
-  <p style="font-size: 0.9rem; color: rgba(255,255,255,0.7);">Hecho para estudiantes, por estudiantes</p>
-  <div class="footer-links">
-    <a href="#">Contacto</a>
-    <a href="#">Privacidad</a>
-    <a href="#">Términos</a>
+  <div class="taskbar-sep"></div>
+  <button class="taskbar-btn" id="tb-landing" onclick="showLanding()">
+    <span class="tb-icon">H</span> Inicio
+  </button>
+  <button class="taskbar-btn" id="tb-app" onclick="showApp()" style="display:none">
+    <span class="tb-icon">C</span> Mi Horario
+  </button>
+  <div id="clock-display">
+    <span id="clock-time">00:00</span>
+    <span class="clock-sep">|</span>
+    <span id="clock-date" style="font-size:11px;color:var(--text-muted)"></span>
   </div>
-</footer>
+</div>
 
-<!-- App (Hidden initially) -->
-<div id="app-root">
-  <div style="background: var(--white); padding: 1rem; box-shadow: var(--shadow);">
-    <button class="btn btn-primary" onclick="backToHome()" style="margin-right: 1rem;">← Volver</button>
-    <h2>Mi Horario</h2>
-  </div>
-  <div id="main-content">
-    <div style="text-align: center; padding: 3rem;">
-      <p style="font-size: 1.2rem; color: var(--text-light);">Tu horario aparecerá aquí</p>
-      <p style="color: var(--text-light);">Funcionalidad de horario en desarrollo</p>
+<!-- ═══════════════ START MENU ═══════════════ -->
+<div id="start-menu">
+  <div class="start-sidebar">Scheme</div>
+  <div class="start-items">
+    <div class="start-item" onclick="showLanding();closeStart()">
+      <div class="si-icon">H</div> Inicio
+    </div>
+    <div class="start-item" onclick="goToApp();closeStart()">
+      <div class="si-icon">C</div> Mi Horario
+    </div>
+    <div class="start-sep"></div>
+    <div class="start-item" onclick="openAuth('login');closeStart()">
+      <div class="si-icon">K</div> Ingresar
+    </div>
+    <div class="start-item" onclick="openAuth('reg');closeStart()">
+      <div class="si-icon">U</div> Registrarse
+    </div>
+    <div class="start-sep"></div>
+    <div class="start-item" style="color:#888;font-size:11px;cursor:default">
+      Scheme v1.1 &bull; 2025
     </div>
   </div>
 </div>
 
+<!-- ═══════════════ LANDING ═══════════════ -->
+<div id="screen-landing">
+  <div id="landing-desktop">
+
+    <div class="desktop-icons">
+      <div class="desktop-icon" ondblclick="goToApp()">
+        <div class="d-icon-img">
+          <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+            <rect x="2" y="5" width="26" height="22" rx="1" fill="#fff" stroke="#000080" stroke-width="1.5"/>
+            <rect x="2" y="5" width="26" height="8" fill="#000080"/>
+            <rect x="8"  y="2" width="3" height="7" rx="1" fill="#000080" stroke="#fff" stroke-width="1"/>
+            <rect x="19" y="2" width="3" height="7" rx="1" fill="#000080" stroke="#fff" stroke-width="1"/>
+            <rect x="6"  y="18" width="4" height="4" fill="#d4d0c8"/>
+            <rect x="13" y="18" width="4" height="4" fill="#000080" opacity=".35"/>
+            <rect x="20" y="18" width="4" height="4" fill="#d4d0c8"/>
+          </svg>
+        </div>
+        <div class="icon-label">Mi Horario</div>
+      </div>
+      <div class="desktop-icon" ondblclick="openAuth('reg')">
+        <div class="d-icon-img">
+          <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+            <circle cx="15" cy="10" r="6" fill="#d4d0c8" stroke="#808080" stroke-width="1.5"/>
+            <path d="M4 27c0-6 5-10 11-10s11 4 11 10" stroke="#000080" stroke-width="1.5" fill="none"/>
+            <circle cx="15" cy="10" r="3" fill="#808080"/>
+          </svg>
+        </div>
+        <div class="icon-label">Crear Cuenta</div>
+      </div>
+      <div class="desktop-icon" ondblclick="openAuth('login')">
+        <div class="d-icon-img">
+          <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+            <rect x="4" y="8" width="22" height="16" rx="1" fill="#d4d0c8" stroke="#808080" stroke-width="1.5"/>
+            <path d="M9 8V6a6 6 0 0 1 12 0v2" stroke="#000080" stroke-width="1.5" fill="none"/>
+            <circle cx="15" cy="17" r="3" fill="#000080"/>
+            <rect x="14" y="19" width="2" height="3.5" fill="#000080"/>
+          </svg>
+        </div>
+        <div class="icon-label">Ingresar</div>
+      </div>
+      <div class="desktop-icon">
+        <div class="d-icon-img">
+          <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+            <circle cx="15" cy="15" r="12" fill="#d4d0c8" stroke="#808080" stroke-width="1.5"/>
+            <text x="15" y="21" text-anchor="middle" font-family="serif" font-weight="bold" font-size="16" fill="#000080">?</text>
+          </svg>
+        </div>
+        <div class="icon-label">Ayuda</div>
+      </div>
+    </div>
+
+    <!-- Hero -->
+    <div class="hero-window">
+      <div class="titlebar">
+        <div class="titlebar-title">
+          <div class="titlebar-icon">S</div>
+          Scheme — Bienvenido
+        </div>
+        <div class="titlebar-btns">
+          <button>_</button>
+          <button>&#9633;</button>
+          <button class="close-btn">&#10005;</button>
+        </div>
+      </div>
+      <div class="hero-body">
+        <div class="hero-title">Scheme</div>
+        <div class="hero-tagline">Horario universitario, sin enredos.</div>
+        <div class="hero-sub">
+          Arma tu semestre, detecta choques, guarda todo en la base de datos<br>
+          y lleva tu horario completo en un solo lugar.
+        </div>
+        <div class="hero-actions">
+          <button class="btn btn-primary" onclick="goToApp()" style="padding:6px 22px;font-size:13px">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="#fff"><polygon points="2,1 9,5 2,9"/></svg>
+            Empezar ahora
+          </button>
+          <button class="btn" onclick="openAuth('reg')" style="padding:6px 16px;font-size:13px">Crear cuenta</button>
+          <button class="btn" onclick="openAuth('login')" style="padding:6px 16px;font-size:13px">Ingresar</button>
+        </div>
+        <div class="hero-divider"></div>
+        <div class="hero-features">
+          <div class="feature-tag"><div class="ft-dot"></div> Gratis</div>
+          <div class="feature-tag"><div class="ft-dot"></div> Sin anuncios</div>
+          <div class="feature-tag"><div class="ft-dot"></div> Comparte con amigos</div>
+          <div class="feature-tag"><div class="ft-dot"></div> Detecta choques</div>
+          <div class="feature-tag"><div class="ft-dot"></div> Conectado a BD</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature cards -->
+    <div class="features-row">
+      <div class="feat-card">
+        <div class="feat-icon">
+          <svg viewBox="0 0 14 14"><rect x="1" y="2" width="12" height="11" stroke="#fff" stroke-width="1.2" fill="none"/><line x1="1" y1="5.5" x2="13" y2="5.5" stroke="#fff" stroke-width="1"/><line x1="4" y1="9" x2="10" y2="9" stroke="#fff" stroke-width="1"/></svg>
+        </div>
+        <div class="feat-card-title">Vista semanal</div>
+        <div class="feat-card-desc">Grilla completa de la semana. Haz clic en una celda para agregar directamente.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">
+          <svg viewBox="0 0 14 14"><ellipse cx="5" cy="5" rx="3" ry="3" stroke="#fff" stroke-width="1.2" fill="none"/><path d="M1 13c0-2.5 2-4 4-4s4 1.5 4 4" stroke="#fff" stroke-width="1.2" fill="none"/></svg>
+        </div>
+        <div class="feat-card-title">BD Persistente</div>
+        <div class="feat-card-desc">Datos guardados en MySQL. Sobreviven al cierre del navegador o del equipo.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">
+          <svg viewBox="0 0 14 14"><polygon points="7,1 8.5,5.5 13,5.5 9.5,8.5 11,13 7,10 3,13 4.5,8.5 1,5.5 5.5,5.5" stroke="#fff" stroke-width="1" fill="none"/></svg>
+        </div>
+        <div class="feat-card-title">Sin choques</div>
+        <div class="feat-card-desc">Alerta automática si dos materias se superponen antes de guardar.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">
+          <svg viewBox="0 0 14 14"><rect x="1" y="1" width="12" height="10" stroke="#fff" stroke-width="1.2" fill="none"/><path d="M4 11v2M10 11v2M2 13h10" stroke="#fff" stroke-width="1"/><line x1="4" y1="6" x2="10" y2="6" stroke="#fff" stroke-width="1"/></svg>
+        </div>
+        <div class="feat-card-title">Estadísticas</div>
+        <div class="feat-card-desc">Créditos totales, horas por día, día más cargado e indicador de semestre.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════ APP SCREEN ═══════════════ -->
+<div id="screen-app">
+<div id="app-root">
+
+  <!-- Menu Bar -->
+  <div id="menu-bar">
+    <div class="menu-item" id="mi-archivo" onclick="toggleDropdown('dd-archivo','mi-archivo')">Archivo</div>
+    <div id="dd-archivo" class="dropdown">
+      <div class="dropdown-item" onclick="openAddModal();closeDropdowns()">
+        <div class="di-icon">+</div> Nueva materia...
+      </div>
+      <div class="dropdown-sep"></div>
+      <div class="dropdown-item" onclick="showLanding();closeDropdowns()">
+        <div class="di-icon">H</div> Volver al inicio
+      </div>
+    </div>
+    <div class="menu-item" id="mi-ver" onclick="toggleDropdown('dd-ver','mi-ver')">Ver</div>
+    <div id="dd-ver" class="dropdown">
+      <div class="dropdown-item" onclick="switchTab('week');closeDropdowns()"><div class="di-icon">S</div> Semana</div>
+      <div class="dropdown-item" onclick="switchTab('list');closeDropdowns()"><div class="di-icon">L</div> Lista</div>
+      <div class="dropdown-item" onclick="switchTab('stats');closeDropdowns()"><div class="di-icon">G</div> Estadísticas</div>
+    </div>
+    <div class="menu-item" id="mi-sem" onclick="toggleDropdown('dd-sem','mi-sem')">Semestre</div>
+    <div id="dd-sem" class="dropdown">
+      <div class="dropdown-item" onclick="changeSemester('2024-2');closeDropdowns()"><div class="di-icon">&nbsp;</div>2024-2</div>
+      <div class="dropdown-item" onclick="changeSemester('2025-1');closeDropdowns()"><div class="di-icon">&nbsp;</div>2025-1</div>
+      <div class="dropdown-item" onclick="changeSemester('2025-2');closeDropdowns()"><div class="di-icon" id="sem-check-2025-2">&#10003;</div>2025-2</div>
+      <div class="dropdown-item" onclick="changeSemester('2026-1');closeDropdowns()"><div class="di-icon" id="sem-check-2026-1">&nbsp;</div>2026-1</div>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div id="toolbar">
+    <div class="tool-group">
+      <button class="btn btn-primary" onclick="openAddModal()" data-tip="Nueva materia">
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="#fff"><line x1="5" y1="1" x2="5" y2="9" stroke="#fff" stroke-width="2"/><line x1="1" y1="5" x2="9" y2="5" stroke="#fff" stroke-width="2"/></svg>
+        Agregar
+      </button>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div id="main-split">
+    <div id="sidebar">
+      <div class="sidebar-header">
+        <span class="sh-icon"></span> Materias
+      </div>
+      <div id="subject-list"></div>
+      <div id="sidebar-summary">
+        <div class="summary-label">Resumen</div>
+        <div class="summary-box">
+          <div class="summary-row">
+            <span>Créditos:</span>
+            <strong id="total-credits">0</strong>
+          </div>
+          <div class="summary-row">
+            <span>Horas:</span>
+            <strong id="total-hours">0</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="content-area">
+      <div id="tab-bar">
+        <div class="tab active" onclick="switchTab('week')">
+          <span class="tab-icon"></span> Semana
+        </div>
+        <div class="tab" onclick="switchTab('list')">
+          <span class="tab-icon"></span> Lista
+        </div>
+        <div class="tab" onclick="switchTab('stats')">
+          <span class="tab-icon"></span> Estadísticas
+        </div>
+      </div>
+
+      <div id="tab-content">
+        <!-- Week View -->
+        <div id="tab-week">
+          <div id="week-nav">
+            <span>Semana actual</span>
+          </div>
+          <div id="schedule-wrapper">
+            <table id="schedule-table">
+              <thead>
+                <tr>
+                  <th>Hora</th>
+                  <th class="today-col-header">Lunes</th>
+                  <th>Martes</th>
+                  <th>Miércoles</th>
+                  <th>Jueves</th>
+                  <th>Viernes</th>
+                </tr>
+              </thead>
+              <tbody id="schedule-body">
+              </tbody>
+            </table>
+            <div id="time-line"></div>
+          </div>
+        </div>
+
+        <!-- List View -->
+        <div id="tab-list">
+          <table class="list-table">
+            <thead>
+              <tr>
+                <th>Materia</th>
+                <th>Hora</th>
+                <th>Profesor</th>
+              </tr>
+            </thead>
+            <tbody id="list-body">
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="3">Total de materias cargadas</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <!-- Stats View -->
+        <div id="tab-stats">
+          <div class="stat-grid" id="stat-grid">
+            <div class="stat-card">
+              <div class="stat-label">Créditos</div>
+              <div class="stat-value" id="stat-credits">0</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Horas/Semana</div>
+              <div class="stat-value" id="stat-hours">0</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Status Bar -->
+  <div id="status-bar">
+    <div class="status-pane">Estado: Listo</div>
+  </div>
+
+</div>
+</div>
+
+<!-- Modal -->
+<div class="modal-backdrop" id="modal-backdrop">
+  <div class="modal">
+    <div class="titlebar">
+      <div class="titlebar-title">
+        <div class="titlebar-icon">+</div>
+        Nueva Materia
+      </div>
+      <div class="titlebar-btns">
+        <button class="close-btn" onclick="closeModal()">✕</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div>
+        <div class="field-label">Nombre</div>
+        <input class="input" id="modal-name" placeholder="Ej: Cálculo I">
+      </div>
+      <div>
+        <div class="field-label">Código</div>
+        <input class="input" id="modal-code" placeholder="Ej: MAT101">
+      </div>
+      <div>
+        <div class="field-label">Profesor</div>
+        <input class="input" id="modal-professor" placeholder="Nombre del profesor">
+      </div>
+      <div>
+        <div class="field-label">Hora Inicio</div>
+        <input class="input" id="modal-start" type="time">
+      </div>
+      <div>
+        <div class="field-label">Hora Fin</div>
+        <input class="input" id="modal-end" type="time">
+      </div>
+      <div>
+        <div class="field-label">Días</div>
+        <div class="days-grid">
+          <label class="day-check"><input type="checkbox" name="days" value="lun"> Lunes</label>
+          <label class="day-check"><input type="checkbox" name="days" value="mar"> Martes</label>
+          <label class="day-check"><input type="checkbox" name="days" value="mie"> Miércoles</label>
+          <label class="day-check"><input type="checkbox" name="days" value="jue"> Jueves</label>
+          <label class="day-check"><input type="checkbox" name="days" value="vie"> Viernes</label>
+          <label class="day-check"><input type="checkbox" name="days" value="sab"> Sábado</label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="addClass()">Agregar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div id="toast-container"></div>
+
 <script>
-function startApp() {
-  document.body.style.background = 'var(--bg)';
-  document.querySelector('nav').style.display = 'none';
-  document.querySelector('.hero').style.display = 'none';
-  document.querySelector('.features').style.display = 'none';
-  document.querySelector('.cta').style.display = 'none';
-  document.querySelector('footer').style.display = 'none';
-  document.getElementById('app-root').classList.add('active');
+let classes = [];
+
+function toggleStart() {
+  document.getElementById('start-menu').classList.toggle('open');
 }
 
-function backToHome() {
-  document.body.style.background = 'var(--bg)';
-  document.querySelector('nav').style.display = 'flex';
-  document.querySelector('.hero').style.display = 'block';
-  document.querySelector('.features').style.display = 'block';
-  document.querySelector('.cta').style.display = 'block';
-  document.querySelector('footer').style.display = 'block';
-  document.getElementById('app-root').classList.remove('active');
+function closeStart() {
+  document.getElementById('start-menu').classList.remove('open');
 }
 
-function scrollToFeatures() {
-  document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
+function showLanding() {
+  document.getElementById('screen-landing').style.display = 'flex';
+  document.getElementById('screen-app').style.display = 'none';
+  document.getElementById('tb-landing').classList.add('active');
+  document.getElementById('tb-app').classList.remove('active');
+  closeStart();
 }
 
-// Set current year in footer
-document.querySelector('footer p').textContent = `© ${new Date().getFullYear()} Scheme - Horarios Universitarios`;
+function showApp() {
+  document.getElementById('screen-landing').style.display = 'none';
+  document.getElementById('screen-app').style.display = 'block';
+  document.getElementById('tb-app').classList.add('active');
+  document.getElementById('tb-landing').classList.remove('active');
+  document.getElementById('tb-app').style.display = 'inline-flex';
+  closeStart();
+}
+
+function goToApp() {
+  showApp();
+}
+
+function toggleDropdown(id, menuId) {
+  const dropdown = document.getElementById(id);
+  const open = dropdown.classList.contains('open');
+  closeDropdowns();
+  if (!open) {
+    dropdown.classList.add('open');
+    document.getElementById(menuId).classList.add('open');
+  }
+}
+
+function closeDropdowns() {
+  document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('open'));
+  document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('open'));
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('[id^="tab-"]').forEach(t => t.style.display = 'none');
+  document.getElementById('tab-' + tab).style.display = 'flex';
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  event.target.closest('.tab')?.classList.add('active');
+}
+
+function openAddModal() {
+  document.getElementById('modal-backdrop').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modal-backdrop').classList.remove('open');
+}
+
+function addClass() {
+  const name = document.getElementById('modal-name').value;
+  const code = document.getElementById('modal-code').value;
+  const professor = document.getElementById('modal-professor').value;
+  const start = document.getElementById('modal-start').value;
+  const end = document.getElementById('modal-end').value;
+  
+  if (name && start && end) {
+    classes.push({name, code, professor, start, end});
+    showToast('Materia agregada', 'ok');
+    document.getElementById('modal-name').value = '';
+    document.getElementById('modal-code').value = '';
+    document.getElementById('modal-professor').value = '';
+    document.getElementById('modal-start').value = '';
+    document.getElementById('modal-end').value = '';
+    closeModal();
+  } else {
+    showToast('Completa todos los campos', 'warn');
+  }
+}
+
+function showToast(msg, type = 'ok') {
+  const toast = document.createElement('div');
+  toast.className = 'toast toast-' + type;
+  toast.textContent = msg;
+  document.getElementById('toast-container').appendChild(toast);
+  setTimeout(() => toast.classList.add('show'), 10);
+  setTimeout(() => toast.remove(), 3000);
+}
+
+function changeSemester(sem) {
+  closeDropdowns();
+}
+
+function openAuth(type) {
+  showToast('Funcionalidad no disponible', 'warn');
+}
+
+// Initialize
+document.getElementById('screen-landing').style.display = 'flex';
+document.getElementById('tb-landing').classList.add('active');
+
+// Clock
+setInterval(() => {
+  const now = new Date();
+  document.getElementById('clock-time').textContent = now.toLocaleTimeString('es-CO', {hour: '2-digit', minute: '2-digit'});
+  document.getElementById('clock-date').textContent = now.toLocaleDateString('es-CO');
+}, 1000);
 </script>
 
 </body>
